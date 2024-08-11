@@ -1,5 +1,3 @@
-import SimpleLightbox from 'simplelightbox';
-
 const renderHTMLElement = (node, content, position = 'beforeend') => {
   node.insertAdjacentHTML(position, content);
 };
@@ -8,7 +6,7 @@ const removeInnerHTMLElement = (node) => {
   node.innerHTML = '';
 };
 
-export const renderSearchFormElement = (node) => {
+export const renderSearchForm = (node) => {
   const content = `
     <form class="search-form" id="search-form">
       <input
@@ -17,20 +15,20 @@ export const renderSearchFormElement = (node) => {
         autocomplete="off"
         placeholder="Search images..."
       />
-      <button type="submit">Search</button>
+      <button type="submit" class="button">Search</button>
     </form>
   `;
 
   renderHTMLElement(node, content);
 };
 
-export const renderGallery = (node) => {
+export const renderGalleryWrapper = (node) => {
   const content = `<div class="gallery" id="gallery"></div>`;
 
   renderHTMLElement(node, content);
 };
 
-export const renderGalleryItem = (node, images) => {
+export const renderGalleryItems = (node, images) => {
   const content = images.map((image) => `
     <div class="gallery-item">
       <a href="${image.largeImageURL}">
@@ -61,21 +59,33 @@ export const renderGalleryItem = (node, images) => {
   renderHTMLElement(node, content);
 };
 
-export const renderImagesElement = (node, images) => {
+export const renderImages = (node, images) => {
+  renderGalleryItems(node, images);
+}
+
+export const renderNewImages = (node, images) => {
   removeInnerHTMLElement(node);
 
   if (images && images.length) {
-    renderGalleryItem(node, images);
+    renderImages(node, images);
   }
 };
 
-export const renderLoadingElement = (node) => {
-  removeInnerHTMLElement(node);
-
+export const renderLoader = (node) => {
   const content = `
-    <div class="loading">Loading images, please wait...</div>
-    <span class="loader"></span>
+    <div class="loader-wrapper hidden">
+      <div class="loading ">Loading images, please wait...</div>
+      <span class="loader"></span>
+    </div>
   `;
 
   renderHTMLElement(node, content);
 };
+
+export const renderButton = (node) => {
+  const content = `
+    <button type="button" class="button load-more hidden">Load more</button>
+  `;
+
+  renderHTMLElement(node, content);
+}

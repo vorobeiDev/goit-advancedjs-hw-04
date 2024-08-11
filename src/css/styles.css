@@ -55,7 +55,7 @@
   border-color: #000;
 }
 
-.search-form button {
+.button {
   font-family: 'Montserrat', sans-serif;
   font-size: 16px;
   display: block;
@@ -86,7 +86,6 @@
 
 .gallery-item a {
   display: block;
-  /*overflow: hidden;*/
 }
 
 .gallery-item a img {
@@ -117,10 +116,19 @@
   line-height: 1.3em;
 }
 
+.loader-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 30px;
+}
+
 .loader {
   width: 48px;
   height: 48px;
-  border: 5px solid #2E2F42;
+  border: 5px solid #4E75FF;
   border-bottom-color: transparent;
   border-radius: 50%;
   display: inline-block;
@@ -135,4 +143,12 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.hidden {
+  display: none;
+}
+
+.load-more {
+  margin: 32px auto 0;
 }

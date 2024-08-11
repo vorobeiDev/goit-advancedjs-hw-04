@@ -35,6 +35,11 @@ const searchResultsWarning = () => {
   });
 }
 
+const resetGallery = () => {
+  images.length = 0;
+  page = 1;
+}
+
 const onSubmitSearchFormHandler = async (event, form) => {
   event.preventDefault();
   query = form.elements.search.value;
@@ -43,20 +48,23 @@ const onSubmitSearchFormHandler = async (event, form) => {
   if (query.trim() !== '') {
     const galleryContainer = document.querySelector('#gallery');
     loader.classList.remove('hidden');
+    resetGallery();
 
-    const { images, total } = await getImagesFromAPI(query);
+    const { images: newImages, total } = await getImagesFromAPI(query, page);
 
-    renderNewImages(galleryContainer, images);
+    renderNewImages(galleryContainer, newImages);
 
-    if (images.length) {
-      gallery.refresh();
+    if (newImages.length) {
       const button = document.querySelector('.load-more');
-      if (images.length >= total) {
+      images.push(...newImages);
+
+      if (newImages.length >= total) {
         searchResultsWarning();
         button.classList.add('hidden');
       } else {
         button.classList.remove('hidden');
       }
+      gallery.refresh();
     } else {
       iziToast.error({
         icon: '',
@@ -86,14 +94,18 @@ const onLoadImagesHandler = async (button) => {
   loader.classList.remove('hidden');
 
   const { images: newImages, total } = await getImagesFromAPI(query, page += 1);
+  images.push(...newImages);
 
-  if (images.length >= total) {
+  renderImages(galleryContainer, newImages);
+  gallery.refresh();
+
+  if (images.length >= total || newImages.length === 0) {
     searchResultsWarning();
   } else {
-    renderImages(galleryContainer, newImages);
-    images.push(...newImages);
-    gallery.refresh();
     button.classList.remove('hidden');
+  }
+
+  if (newImages.length !== 0) {
     const image = document.querySelector('.gallery-item');
     if (image) {
       const height = image.getBoundingClientRect().height;
